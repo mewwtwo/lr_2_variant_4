@@ -20,7 +20,9 @@ double measureTime(Func func) {
     return duration.count();
 }
 
-bool isEven(int x) { return x % 2 == 0; }
+bool isEvenNumber(int x){
+    return x % 2 == 0;
+}
 
 bool isPrime(int x) {
     if (x < 2) return false;
@@ -33,7 +35,6 @@ std::vector<int> loadData(int n) {
     std::ifstream in("data/seq_" + std::to_string(n) + ".txt");
     int count;
     in >> count;
-
     std::vector<int> data(count);
 
     for (auto &x : data)
@@ -57,12 +58,10 @@ long long countIfParUnseq(const std::vector<int> &data, bool (*pred)(int)) {
     return std::count_if(std::execution::par_unseq, data.begin(), data.end(), pred);
 }
 
-void countChunk(const std::vector<int> &data, bool (*pred)(int), int begin, int end, long long &count) {
+void countInRange(const std::vector<int> &data, bool (*pred)(int), int begin, int end, long long &count) {
     count = std::count_if(data.begin() + begin, data.begin() + end, pred);
 }
 
-// ділимо масив на K частин, кожну рахуємо в своєму потоці функцією
-// countChunk, потім складаємо часткові результати std::reduce
 long long countIfCustomParallel(const std::vector<int> &data, bool (*pred)(int), int K) {
     int n = (int)data.size();
     int chunkSize = n / K;
@@ -72,8 +71,8 @@ long long countIfCustomParallel(const std::vector<int> &data, bool (*pred)(int),
 
     int begin = 0;
     for (int t = 0; t < K; t++) {
-        int end = (t == K - 1) ? n : begin + chunkSize; // останній потік забирає залишок
-        threads[t] = std::thread(countChunk, std::cref(data), pred, begin, end, std::ref(partialCounts[t]));
+        int end = (t == K - 1) ? n : begin + chunkSize;
+        threads[t] = std::thread(countInRange, std::cref(data), pred, begin, end, std::ref(partialCounts[t]));
         begin = end;
     }
 
@@ -109,7 +108,7 @@ int main() {
     std::cout << "hardware_concurrency = " << std::thread::hardware_concurrency() << "\n\n";
 
     std::pair<const char *, bool (*)(int)> preds[] = {
-        {"even", isEven},
+        {"even", isEvenNumber},
         {"prime", isPrime},
     };
 
