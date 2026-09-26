@@ -1,0 +1,37 @@
+hardware_concurrency = 8
+
+N=100000 predicate=even policy=none result=50016 total=4.173ms compute=0.851ms
+N=100000 predicate=even policy=seq result=50016 total=4.195ms compute=0.603ms
+N=100000 predicate=even policy=par result=50016 total=6.888ms compute=0.943ms
+N=100000 predicate=even policy=par_unseq result=50016 total=4.049ms compute=0.341ms
+N=100000 predicate=prime policy=none result=9435 total=13.152ms compute=7.569ms
+N=100000 predicate=prime policy=seq result=9435 total=13.527ms compute=8.711ms
+N=100000 predicate=prime policy=par result=9435 total=9.392ms compute=2.981ms
+N=100000 predicate=prime policy=par_unseq result=9435 total=9.69ms compute=2.676ms
+
+N=1000000 predicate=even policy=none result=500203 total=41.429ms compute=5.768ms
+N=1000000 predicate=even policy=seq result=500203 total=37.763ms compute=5.794ms
+N=1000000 predicate=even policy=par result=500203 total=34.296ms compute=1.805ms
+N=1000000 predicate=even policy=par_unseq result=500203 total=35.478ms compute=2.028ms
+N=1000000 predicate=prime policy=none result=96284 total=105.73ms compute=71.698ms
+N=1000000 predicate=prime policy=seq result=96284 total=103.626ms compute=71.721ms
+N=1000000 predicate=prime policy=par result=96284 total=43.674ms compute=12.585ms
+N=1000000 predicate=prime policy=par_unseq result=96284 total=45.869ms compute=13.977ms
+
+N=10000000 predicate=even policy=none result=4998689 total=388.132ms compute=57.729ms
+N=10000000 predicate=even policy=seq result=4998689 total=376.756ms compute=58.194ms
+N=10000000 predicate=even policy=par result=4998689 total=323.645ms compute=10.938ms
+N=10000000 predicate=even policy=par_unseq result=4998689 total=337.195ms compute=17.246ms
+N=10000000 predicate=prime policy=none result=958677 total=1028.76ms compute=712.659ms
+N=10000000 predicate=prime policy=seq result=958677 total=1028.21ms compute=731.684ms
+N=10000000 predicate=prime policy=par result=958677 total=453.93ms compute=127.546ms
+N=10000000 predicate=prime policy=par_unseq result=958677 total=471.766ms compute=139.159ms
+
+ custom parallel count_if 
+N=10000000 predicate=prime
+K=1 result=958677 compute=714.917 ms
+K=2 result=958677 compute=368.792 ms
+K=4 result=958677 compute=191.928 ms
+K=6 result=958677 compute=160.748 ms
+K=8 result=958677 compute=130.639 ms
+K=12 result=958677 compute=128.491 ms
