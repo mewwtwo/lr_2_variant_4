@@ -1,22 +1,27 @@
-CXX = /opt/homebrew/bin/g++-16
-TBB = $(shell brew --prefix tbb)
-INCLUDES = -Iinclude -I$(TBB)/include
-LIBS = -L$(TBB)/lib -ltbb -pthread
-SRC = $(wildcard src/*.cpp)
-HDR = $(wildcard include/*.h)
+ifeq ($(OS),Windows_NT)
+    CXX = g++
+    EXE = .exe
+else
+    CXX = g++-16
+    TBB = $(shell brew --prefix tbb)
+    TBB_FLAGS = -I$(TBB)/include -L$(TBB)/lib
+endif
 
-all: lab_O0 lab_O3
+FILES = $(wildcard src/*.cpp include/*.h)
+FLAGS = -std=c++20 -Iinclude $(TBB_FLAGS) src/*.cpp -ltbb -pthread
 
-lab_O0: $(SRC) $(HDR)
-	$(CXX) -std=c++20 -O0 $(INCLUDES) $(SRC) -o lab_O0 $(LIBS)
+all: lab_O0$(EXE) lab_O3$(EXE)
 
-lab_O3: $(SRC) $(HDR)
-	$(CXX) -std=c++20 -O3 $(INCLUDES) $(SRC) -o lab_O3 $(LIBS)
+lab_O0$(EXE): $(FILES)
+	$(CXX) -O0 $(FLAGS) -o $@
+
+lab_O3$(EXE): $(FILES)
+	$(CXX) -O3 $(FLAGS) -o $@
 
 run: all
 	mkdir -p results
-	./lab_O0 > results/output_O0.txt
-	./lab_O3 > results/output_O3.txt
+	./lab_O0$(EXE) > results/output_O0.txt
+	./lab_O3$(EXE) > results/output_O3.txt
 
 clean:
-	rm -f lab_O0 lab_O3
+	rm -f lab_O0$(EXE) lab_O3$(EXE)

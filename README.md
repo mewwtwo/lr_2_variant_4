@@ -32,20 +32,17 @@ make run
 Встановити бібліотеки (у терміналі **MSYS2 MinGW64**):
 
 ```bash
-pacman -S mingw-w64-x86_64-gcc mingw-w64-x86_64-tbb
+pacman -S mingw-w64-x86_64-gcc mingw-w64-x86_64-tbb make
 ```
 
-Зібрати і запустити:
+Зібрати і запустити - та сама команда, що й на macOS (Makefile сам визначає
+Windows, додає `.exe` і використовує `g++`):
 
 ```bash
-mkdir -p results
-
-g++ -std=c++20 -O0 -Iinclude src/*.cpp -o lab_O0.exe -ltbb -pthread
-g++ -std=c++20 -O3 -Iinclude src/*.cpp -o lab_O3.exe -ltbb -pthread
-
-./lab_O0.exe > results/output_O0.txt
-./lab_O3.exe > results/output_O3.txt
+make run
 ```
+
+Тільки зібрати: `make`. Видалити зібране: `make clean`.
 
 ## Дані
 
