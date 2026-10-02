@@ -1,7 +1,6 @@
 #include "CountAlgorithm.h"
 
 #include <algorithm>
-#include <execution>
 #include <functional>
 #include <numeric>
 #include <thread>
@@ -10,24 +9,6 @@ std::string CountNone::name() const { return "none"; }
 
 long long CountNone::count(const std::vector<int> &data, PredicateFn pred) const {
     return std::count_if(data.begin(), data.end(), pred);
-}
-
-std::string CountSeq::name() const { return "seq"; }
-
-long long CountSeq::count(const std::vector<int> &data, PredicateFn pred) const {
-    return std::count_if(std::execution::seq, data.begin(), data.end(), pred);
-}
-
-std::string CountPar::name() const { return "par"; }
-
-long long CountPar::count(const std::vector<int> &data, PredicateFn pred) const {
-    return std::count_if(std::execution::par, data.begin(), data.end(), pred);
-}
-
-std::string CountParUnseq::name() const { return "par_unseq"; }
-
-long long CountParUnseq::count(const std::vector<int> &data, PredicateFn pred) const {
-    return std::count_if(std::execution::par_unseq, data.begin(), data.end(), pred);
 }
 
 CountCustomParallel::CountCustomParallel(int partsCount)

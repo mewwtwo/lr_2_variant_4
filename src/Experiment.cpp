@@ -12,9 +12,9 @@
 Experiment::Experiment(const DataSet &dataSet)
     : dataSet_(dataSet), predicates_(getPredicates()) {
     algorithms_.push_back(std::make_unique<CountNone>());
-    algorithms_.push_back(std::make_unique<CountSeq>());
-    algorithms_.push_back(std::make_unique<CountPar>());
-    algorithms_.push_back(std::make_unique<CountParUnseq>());
+    algorithms_.push_back(makePolicyAlgorithm("seq", std::execution::seq));
+    algorithms_.push_back(makePolicyAlgorithm("par", std::execution::par));
+    algorithms_.push_back(makePolicyAlgorithm("par_unseq", std::execution::par_unseq));
 }
 
 void Experiment::runOne(int n, const std::string &label,
