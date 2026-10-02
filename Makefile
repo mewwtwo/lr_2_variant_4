@@ -1,22 +1,22 @@
 CXX = /opt/homebrew/bin/g++-16
 TBB = $(shell brew --prefix tbb)
-FLAGS = -std=c++20 -I$(TBB)/include -L$(TBB)/lib -ltbb -pthread
+INCLUDES = -Iinclude -I$(TBB)/include
+LIBS = -L$(TBB)/lib -ltbb -pthread
+SRC = $(wildcard src/*.cpp)
+HDR = $(wildcard include/*.h)
 
-all: generate lab_O0 lab_O3
+all: lab_O0 lab_O3
 
-generate: generate.cpp
-	$(CXX) $(FLAGS) -O2 generate.cpp -o generate
+lab_O0: $(SRC) $(HDR)
+	$(CXX) -std=c++20 -O0 $(INCLUDES) $(SRC) -o lab_O0 $(LIBS)
 
-lab_O0: lab.cpp
-	$(CXX) $(FLAGS) -O0 lab.cpp -o lab_O0
-
-lab_O3: lab.cpp
-	$(CXX) $(FLAGS) -O3 lab.cpp -o lab_O3
+lab_O3: $(SRC) $(HDR)
+	$(CXX) -std=c++20 -O3 $(INCLUDES) $(SRC) -o lab_O3 $(LIBS)
 
 run: all
-	./generate
+	mkdir -p results
 	./lab_O0 > results/output_O0.txt
 	./lab_O3 > results/output_O3.txt
 
 clean:
-	rm -f generate lab_O0 lab_O3
+	rm -f lab_O0 lab_O3
