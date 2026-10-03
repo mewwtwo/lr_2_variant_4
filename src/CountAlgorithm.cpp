@@ -1,7 +1,6 @@
 #include "CountAlgorithm.h"
 
 #include <algorithm>
-#include <functional>
 #include <numeric>
 #include <thread>
 
@@ -18,27 +17,21 @@ std::string CountCustomParallel::name() const {
     return "custom(K=" + std::to_string(partsCount_) + ")";
 }
 
-void CountCustomParallel::countInRange(const std::vector<int> &data, PredicateFn pred,
-                                       int begin, int end, long long &count) {
-    count = std::count_if(data.begin() + begin, data.begin() + end, pred);
-}
-
 long long CountCustomParallel::count(const std::vector<int> &data, PredicateFn pred) const {
-    int n = (int)data.size();
-    int chunkSize = n / partsCount_;
-
-    std::vector<std::thread> threads(partsCount_);
+    const std::size_t n = data.size();
     std::vector<long long> partialCounts(partsCount_);
+    std::vector<std::thread> threads;
 
-    int begin = 0;
     for (int t = 0; t < partsCount_; t++) {
-        int end = (t == partsCount_ - 1) ? n : begin + chunkSize;
-        threads[t] = std::thread(countInRange, std::cref(data), pred, begin, end, std::ref(partialCounts[t]));
-        begin = end;
+        auto first = data.begin() + n * t / partsCount_;
+        auto last = data.begin() + n * (t + 1) / partsCount_;
+        threads.emplace_back([=, &partialCounts] {
+            partialCounts[t] = std::count_if(first, last, pred);
+        });
     }
 
-    for (int t = 0; t < partsCount_; t++) {
-        threads[t].join();
+    for (std::thread &thread : threads) {
+        thread.join();
     }
 
     return std::reduce(partialCounts.begin(), partialCounts.end(), 0LL);

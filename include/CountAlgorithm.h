@@ -52,8 +52,5 @@ public:
     long long count(const std::vector<int> &data, PredicateFn pred) const override;
 
 private:
-    static void countInRange(const std::vector<int> &data, PredicateFn pred,
-                             int begin, int end, long long &count);
-
     int partsCount_;
 };
